@@ -9,9 +9,21 @@ class ProductViewModel extends ChangeNotifier {
 
   List<Product> get products => _products;
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts({String query = ''}) async {
     try {
-      final data = await _apiService.get('products');
+      final data = await _apiService.get('products/search?q=$query');
+      _products = (data['products'] as List)
+          .map((json) => Product.fromJson(json))
+          .toList();
+      notifyListeners();
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  Future<void> fetchProductsByCategory(String category) async {
+    try {
+      final data = await _apiService.get('products/category/$category');
       _products = (data['products'] as List)
           .map((json) => Product.fromJson(json))
           .toList();

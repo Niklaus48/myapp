@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
 import 'package:myapp/views/splash_screen.dart';
@@ -11,6 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ProductViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (_) => CartViewModel()),
       ],
       child: const MyApp(),
     ),

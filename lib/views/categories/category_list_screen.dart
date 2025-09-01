@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
+import 'package:myapp/views/products/products_by_category_screen.dart';
 import 'package:provider/provider.dart';
 
 class CategoryListScreen extends StatefulWidget {
@@ -30,7 +31,14 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
           return ListTile(
             title: Text(category.name),
             onTap: () {
-              // TODO: Navigate to products by category screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductsByCategoryScreen(
+                    category: category.name,
+                  ),
+                ),
+              );
             },
           );
         },
