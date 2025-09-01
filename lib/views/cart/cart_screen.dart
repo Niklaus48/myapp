@@ -29,10 +29,26 @@ class CartScreen extends StatelessWidget {
           return ListTile(
             leading: Image.network(cartItem.product.thumbnail),
             title: Text(cartItem.product.title),
-            subtitle: Text('Quantity: \${cartItem.quantity}'),
-            trailing: Text('\\\$${cartItem.product.price * cartItem.quantity}'),
+            subtitle: Text('Quantity: ${cartItem.quantity}'),
+            trailing: Text('\$${cartItem.product.price * cartItem.quantity}'),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Total: \$${cartViewModel.totalPrice.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Checkout'),
+            ),
+          ],
+        ),
       ),
     );
   }

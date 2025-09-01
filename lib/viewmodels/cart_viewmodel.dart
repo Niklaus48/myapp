@@ -8,6 +8,14 @@ class CartViewModel extends ChangeNotifier {
 
   List<CartItem> get cartItems => _cartItems;
 
+  double get totalPrice {
+    double total = 0;
+    for (var item in _cartItems) {
+      total += item.product.price * item.quantity;
+    }
+    return total;
+  }
+
   void addToCart(Product product) {
     for (var item in _cartItems) {
       if (item.product.id == product.id) {

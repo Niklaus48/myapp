@@ -5,7 +5,9 @@ import 'package:myapp/firebase_options.dart'; // Import the generated file
 import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
+import 'package:myapp/viewmodels/favorite_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
+import 'package:myapp/viewmodels/user_viewmodel.dart';
 import 'package:myapp/views/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ProductViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => CartViewModel()),
+        ChangeNotifierProvider(create: (_) => FavoriteViewModel()),
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
       ],
       child: const MyApp(),
     ),
