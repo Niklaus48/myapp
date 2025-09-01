@@ -1,10 +1,11 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/models/category.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
+import 'package:myapp/views/auth/login_screen.dart';
 import 'package:myapp/views/cart/cart_screen.dart';
-import 'package:myapp/views/favorites/favorite_screen.dart';
 import 'package:myapp/views/products/product_card.dart';
 import 'package:myapp/views/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool _isFilterExpanded = false;
 
   @override
   void initState() {
@@ -35,29 +37,32 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
     final categoryViewModel = Provider.of<CategoryViewModel>(context);
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavoriteScreen()),
-              );
-            },
-          ),
+          if (user != null)
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                );
+              },
+            )
+          else
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              child: const Text('Sign In', style: TextStyle(color: Colors.white)),
+            ),
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
@@ -82,43 +87,58 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownButton<String>(
-              value: productViewModel.selectedCategory,
-              hint: const Text('Select a category'),
-              isExpanded: true,
-              items: categoryViewModel.categories
-                  .map((Category category) => DropdownMenuItem<String>(
-                        value: category.name,
-                        child: Text(category.name),
-                      ))
-                  .toList(),
-              onChanged: (String? newValue) {
-                productViewModel.updateCategory(newValue);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const Text('Price Range'),
-                RangeSlider(
-                  values: productViewModel.priceRange,
-                  min: 0,
-                  max: productViewModel.maxPrice,
-                  divisions: productViewModel.maxPrice.toInt(),
-                  labels: RangeLabels(
-                    '\$${productViewModel.priceRange.start.round()}',
-                    '\$${productViewModel.priceRange.end.round()}',
+          ExpansionPanelList(
+            expansionCallback: (int index, bool isExpanded) {
+              setState(() {
+                _isFilterExpanded = !isExpanded;
+              });
+            },
+            children: [
+              ExpansionPanel(
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return const ListTile(
+                    title: Text('Filters'),
+                  );
+                },
+                body: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      DropdownButton<String>(
+                        value: productViewModel.selectedCategory,
+                        hint: const Text('Select a category'),
+                        isExpanded: true,
+                        items: categoryViewModel.categories
+                            .map((Category category) => DropdownMenuItem<String>(
+                                  value: category.name,
+                                  child: Text(category.name),
+                                ))
+                            .toList(),
+                        onChanged: (String? newValue) {
+                          productViewModel.updateCategory(newValue);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      const Text('Price Range'),
+                      RangeSlider(
+                        values: productViewModel.priceRange,
+                        min: 0,
+                        max: productViewModel.maxPrice,
+                        divisions: productViewModel.maxPrice.toInt(),
+                        labels: RangeLabels(
+                          '\$${productViewModel.priceRange.start.round()}',
+                          '\$${productViewModel.priceRange.end.round()}',
+                        ),
+                        onChanged: (RangeValues values) {
+                          productViewModel.updatePriceRange(values);
+                        },
+                      ),
+                    ],
                   ),
-                  onChanged: (RangeValues values) {
-                    productViewModel.updatePriceRange(values);
-                  },
                 ),
-              ],
-            ),
+                isExpanded: _isFilterExpanded,
+              ),
+            ],
           ),
           ElevatedButton(
             onPressed: () {

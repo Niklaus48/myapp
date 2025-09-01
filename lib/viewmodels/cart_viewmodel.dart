@@ -28,8 +28,22 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFromCart(Product product) {
-    _cartItems.removeWhere((item) => item.product.id == product.id);
+  void removeFromCart(CartItem cartItem) {
+    _cartItems.remove(cartItem);
+    notifyListeners();
+  }
+
+  void increaseQuantity(CartItem cartItem) {
+    cartItem.quantity++;
+    notifyListeners();
+  }
+
+  void decreaseQuantity(CartItem cartItem) {
+    if (cartItem.quantity > 1) {
+      cartItem.quantity--;
+    } else {
+      _cartItems.remove(cartItem);
+    }
     notifyListeners();
   }
 

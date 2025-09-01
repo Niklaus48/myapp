@@ -24,15 +24,22 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   void initState() {
     super.initState();
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    userViewModel.loadUser();
-    _firstNameController = TextEditingController(text: userViewModel.user?.firstName);
-    _middleNameController =
-        TextEditingController(text: userViewModel.user?.middleName);
-    _lastNameController = TextEditingController(text: userViewModel.user?.lastName);
-    _phoneNumberController =
-        TextEditingController(text: userViewModel.user?.phoneNumber);
-    _addressController = TextEditingController(text: userViewModel.user?.address);
-    _postCodeController = TextEditingController(text: userViewModel.user?.postCode);
+    userViewModel.loadUser().then((_) {
+      setState(() {
+        _firstNameController.text = userViewModel.user?.firstName ?? '';
+        _middleNameController.text = userViewModel.user?.middleName ?? '';
+        _lastNameController.text = userViewModel.user?.lastName ?? '';
+        _phoneNumberController.text = userViewModel.user?.phoneNumber ?? '';
+        _addressController.text = userViewModel.user?.address ?? '';
+        _postCodeController.text = userViewModel.user?.postCode ?? '';
+      });
+    });
+    _firstNameController = TextEditingController();
+    _middleNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+    _addressController = TextEditingController();
+    _postCodeController = TextEditingController();
   }
 
   @override
@@ -40,7 +47,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     final userViewModel = Provider.of<UserViewModel>(context);
 
     return Scaffold(
-      body: userViewModel.user == null
+      body: userViewModel.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),

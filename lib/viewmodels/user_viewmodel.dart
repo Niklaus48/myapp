@@ -7,10 +7,15 @@ import 'package:myapp/services/user_service.dart';
 class UserViewModel extends ChangeNotifier {
   final UserService _userService = UserService();
   User? _user;
+  bool _isLoading = false;
 
   User? get user => _user;
+  bool get isLoading => _isLoading;
 
   Future<void> loadUser() async {
+    _isLoading = true;
+    notifyListeners();
+
     final currentUser = auth.FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       _user = await _userService.getUser(currentUser.uid);
@@ -18,8 +23,10 @@ class UserViewModel extends ChangeNotifier {
         _user = User(uid: currentUser.uid, email: currentUser.email);
         await _userService.createUser(_user!);
       }
-      notifyListeners();
     }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> updateUser(User user) async {

@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/views/profile/favorites_screen.dart';
 import 'package:myapp/views/profile/order_history_screen.dart';
@@ -14,6 +15,15 @@ class ProfileScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(icon: Icon(Icons.favorite), text: 'Favorites'),

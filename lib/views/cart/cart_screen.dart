@@ -26,11 +26,42 @@ class CartScreen extends StatelessWidget {
         itemCount: cartViewModel.cartItems.length,
         itemBuilder: (context, index) {
           final cartItem = cartViewModel.cartItems[index];
-          return ListTile(
-            leading: Image.network(cartItem.product.thumbnail),
-            title: Text(cartItem.product.title),
-            subtitle: Text('Quantity: ${cartItem.quantity}'),
-            trailing: Text('\$${cartItem.product.price * cartItem.quantity}'),
+          return Dismissible(
+            key: Key(cartItem.product.id.toString()),
+            onDismissed: (direction) {
+              cartViewModel.removeFromCart(cartItem);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${cartItem.product.title} removed from cart'),
+                ),
+              );
+            },
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            child: ListTile(
+              leading: Image.network(cartItem.product.thumbnail),
+              title: Text(cartItem.product.title),
+              subtitle: Text(
+                  '\$${cartItem.product.price.toStringAsFixed(2)} x ${cartItem.quantity}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () => cartViewModel.decreaseQuantity(cartItem),
+                  ),
+                  Text(cartItem.quantity.toString()),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () => cartViewModel.increaseQuantity(cartItem),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
