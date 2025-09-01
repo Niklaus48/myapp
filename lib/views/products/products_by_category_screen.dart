@@ -18,8 +18,9 @@ class _ProductsByCategoryScreenState extends State<ProductsByCategoryScreen> {
   @override
   void initState() {
     super.initState();
+    // Corrected to use the fetchProducts method with the category parameter
     Provider.of<ProductViewModel>(context, listen: false)
-        .fetchProductsByCategory(widget.category);
+        .fetchProducts(category: widget.category);
   }
 
   @override
@@ -28,25 +29,28 @@ class _ProductsByCategoryScreenState extends State<ProductsByCategoryScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.category)),
-      body: ListView.builder(
-        itemCount: productViewModel.products.length,
-        itemBuilder: (context, index) {
-          final product = productViewModel.products[index];
-          return ListTile(
-            leading: Image.network(product.thumbnail),
-            title: Text(product.title),
-            subtitle: Text('\$${product.price}'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailScreen(product: product),
-                ),
-              );
-            },
-          );
-        },
-      ),
+      body: productViewModel.products.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: productViewModel.products.length,
+              itemBuilder: (context, index) {
+                final product = productViewModel.products[index];
+                return ListTile(
+                  leading: Image.network(product.thumbnail),
+                  title: Text(product.title),
+                  subtitle: Text('\$${product.price}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProductDetailScreen(product: product),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }
