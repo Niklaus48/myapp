@@ -9,21 +9,16 @@ class ProductViewModel extends ChangeNotifier {
 
   List<Product> get products => _products;
 
-  Future<void> fetchProducts({String query = ''}) async {
+  Future<void> fetchProducts({String query = '', String? category}) async {
     try {
-      final data = await _apiService.get('products/search?q=$query');
-      _products = (data['products'] as List)
-          .map((json) => Product.fromJson(json))
-          .toList();
-      notifyListeners();
-    } catch (e) {
-      // Handle error
-    }
-  }
+      String endpoint = 'products';
+      if (category != null && category.isNotEmpty) {
+        endpoint = 'products/category/$category';
+      } else if (query.isNotEmpty) {
+        endpoint = 'products/search?q=$query';
+      }
 
-  Future<void> fetchProductsByCategory(String category) async {
-    try {
-      final data = await _apiService.get('products/category/$category');
+      final data = await _apiService.get(endpoint);
       _products = (data['products'] as List)
           .map((json) => Product.fromJson(json))
           .toList();

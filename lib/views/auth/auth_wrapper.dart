@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/views/auth/login_screen.dart';
-import 'package:myapp/views/home_screen.dart';
+import 'package:myapp/views/products/product_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -19,7 +19,7 @@ class AuthWrapper extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
-          return const HomeScreen();
+          return const ProductListScreen();
         } else {
           return const LoginScreen();
         }

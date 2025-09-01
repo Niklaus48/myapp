@@ -6,7 +6,7 @@ import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
-import 'package:myapp/views/auth/auth_wrapper.dart';
+import 'package:myapp/views/home_page.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthWrapper(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

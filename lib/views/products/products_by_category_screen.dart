@@ -10,7 +10,7 @@ class ProductsByCategoryScreen extends StatefulWidget {
   const ProductsByCategoryScreen({super.key, required this.category});
 
   @override
-  _ProductsByCategoryScreenState createState() =>
+  State<ProductsByCategoryScreen> createState() =>
       _ProductsByCategoryScreenState();
 }
 
