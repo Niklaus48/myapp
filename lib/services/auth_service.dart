@@ -11,9 +11,8 @@ class AuthService {
         password: password,
       );
       return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      // Handle error
-      return null;
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -24,9 +23,8 @@ class AuthService {
         password: password,
       );
       return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      // Handle error
-      return null;
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
