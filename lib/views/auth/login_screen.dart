@@ -43,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _passwordController.text,
           );
         }
+        if (mounted) Navigator.of(context).pop();
       } on FirebaseAuthException catch (e) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

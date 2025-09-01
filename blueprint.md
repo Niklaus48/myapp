@@ -15,6 +15,9 @@ This is a Flutter application for an online shop. It uses Firebase for authentic
     * **Dynamic Profile Button:** The app bar now displays a profile icon for logged-in users and a "Sign In" button for guests.
     * **Sign Out:** Users can sign out from their profile screen.
     * **Real-Time UI Updates:** The UI automatically updates based on the user's authentication state.
+    * **Post-Authentication Redirect:** Users are automatically redirected to the product list page after a successful sign-in or sign-up.
+    * **Automatic Sign-In on Sign-Up:** New users are automatically signed in after creating an account.
+    * **Improved Sign-In Button Visibility:** The "Sign In" button now has a contrasting color, making it easily visible on the app bar.
 * **Tabbed Profile Screen:** The profile section is organized into three tabs:
     * **Favorites:** Users can view a list of their favorited items, accessed through their profile.
     * **Order History:** A dedicated screen to display the user's past orders.
@@ -26,6 +29,7 @@ This is a Flutter application for an online shop. It uses Firebase for authentic
     * A collapsible section that combines category and price filters for a cleaner UI.
     * **Category Filter:** Users can filter products by category.
     * **Price Filter:** Users can filter products by price using a range slider.
+    * **Fixed Filter Expansion:** The filter section now expands and collapses correctly.
 * **Advanced Shopping Cart:**
     * Users can add products to their shopping cart.
     * Users can view the items in the cart.

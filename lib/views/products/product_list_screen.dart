@@ -66,7 +66,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       MaterialPageRoute(builder: (context) => const LoginScreen()),
                     );
                   },
-                  child: const Text('Sign In', style: TextStyle(color: Colors.white)),
+                  child: Text('Sign In', style: TextStyle(color: Theme.of(context).primaryColor)),
                 );
               }
             },
