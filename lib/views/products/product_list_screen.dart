@@ -37,32 +37,40 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
     final categoryViewModel = Provider.of<CategoryViewModel>(context);
-    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
         actions: [
-          if (user != null)
-            IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasData) {
+                return IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                    );
+                  },
                 );
-              },
-            )
-          else
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+              } else {
+                return TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  child: const Text('Sign In', style: TextStyle(color: Colors.white)),
                 );
-              },
-              child: const Text('Sign In', style: TextStyle(color: Colors.white)),
-            ),
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {

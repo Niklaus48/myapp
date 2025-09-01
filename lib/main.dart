@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/firebase_options.dart'; // Import the generated file
 import 'package:myapp/services/auth_service.dart';
+import 'package:myapp/theme/app_theme.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/favorite_viewmodel.dart';
@@ -40,9 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Online Shop',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AppTheme.lightTheme,
       home: const WelcomeScreen(),
       debugShowCheckedModeBanner: false,
     );

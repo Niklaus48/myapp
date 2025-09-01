@@ -26,21 +26,18 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: Card(
-        elevation: 4.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
+              alignment: Alignment.topRight,
               children: [
                 Hero(
                   tag: product.id,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0),
                     ),
                     child: Image.network(
                       product.thumbnail,
@@ -50,24 +47,20 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(
-                      favoriteViewModel.isFavorite(product)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      if (favoriteViewModel.isFavorite(product)) {
-                        favoriteViewModel.removeFromFavorites(product);
-                      } else {
-                        favoriteViewModel.addToFavorites(product);
-                      }
-                    },
+                IconButton(
+                  icon: Icon(
+                    favoriteViewModel.isFavorite(product)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.red,
                   ),
+                  onPressed: () {
+                    if (favoriteViewModel.isFavorite(product)) {
+                      favoriteViewModel.removeFromFavorites(product);
+                    } else {
+                      favoriteViewModel.addToFavorites(product);
+                    }
+                  },
                 ),
               ],
             ),
@@ -78,28 +71,25 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.title,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4.0),
                   Text(
                     '\$${product.price}',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
                 ],
               ),
             ),
+            const Spacer(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ElevatedButton.icon(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
                 onPressed: () {
                   cartViewModel.addToCart(product);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -109,17 +99,9 @@ class ProductCard extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('Add to Cart'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                child: const Center(child: Text('Add to Cart')),
               ),
-            )
+            ),
           ],
         ),
       ),
