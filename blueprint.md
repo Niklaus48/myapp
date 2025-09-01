@@ -1,44 +1,29 @@
 
-# Online Shop App Blueprint
+# Online Shop Application Blueprint
 
 ## Overview
 
-This document outlines the plan for creating a Flutter online shop application. The app will use the MVVM architecture and the DummyJSON API for data.
+This document outlines the architecture and features of the Online Shop Flutter application. The application allows users to browse products, view product details, and manage a shopping cart. It leverages Firebase for authentication and a third-party API for product and category data.
 
-## Features
+## Style, Design, and Features
 
-*   **Splash Screen:** A welcoming splash screen.
-*   **Authentication:** Sign in and sign up functionality.
-*   **Main Page:** Displays product categories and special offers.
-*   **Product Lists:** Shows all products within a selected category.
-*   **Search:** Allows users to search for products.
-*   **Product Details:** A detailed view of a single product.
-*   **Shopping Cart:** Users can add/remove items to their cart.
-*   **User Profile:** Displays user information.
-*   **Settings:** Includes a logout option.
+### Implemented
 
-## Architecture
+*   **Product Browsing:** Users can view a list of products with their titles, prices, and thumbnails.
+*   **Product Search:** Users can search for products by title.
+*   **Category Browsing:** Users can view a list of product categories.
+*   **Products by Category:** Users can view products belonging to a specific category.
+*   **Product Details:** Users can view detailed information about a product.
+*   **Shopping Cart:** Users can add and remove products from their shopping cart.
+*   **Splash Screen:** A simple splash screen is displayed on app startup.
+*   **Bottom Navigation:** A bottom navigation bar allows users to switch between the product list and category list.
 
-*   **MVVM (Model-View-ViewModel):** To separate UI from business logic.
-*   **Provider:** For state management.
-*   **Services:** To interact with the DummyJSON API.
+### Current Plan: Firebase Authentication
 
-## Plan
+I will implement a complete authentication system using Firebase Authentication.
 
-1.  **Project Setup:**
-    *   Add dependencies: `http`, `provider`, `flutter_spinkit`, `shared_preferences`.
-    *   Create the MVVM folder structure.
-2.  **Core Setup:**
-    *   Implement a base API service.
-    *   Create `main.dart` and a splash screen.
-3.  **Authentication:**
-    *   Build login and sign-up screens and view models.
-4.  **Main Page:**
-    *   Develop the home screen to display categories and products.
-5.  **Product Pages:**
-    *   Create screens for product lists and details.
-6.  **Additional Features:**
-    *   Implement search, cart, profile, and settings pages.
-7.  **UI/UX:**
-    *   Design a user-friendly and visually appealing interface.
-
+*   **Login Screen:** A new screen will be created to allow users to sign in with their email and password.
+*   **Registration:** Users will be able to create a new account with their email and password.
+*   **Authentication Service:** A dedicated service will be created to handle all Firebase Authentication logic, including sign-in, sign-up, and sign-out.
+*   **Navigation Flow:** The application will navigate to the home screen upon successful login and to the login screen upon logout.
+*   **Logout Button:** A logout button will be added to the home screen.

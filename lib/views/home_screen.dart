@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/views/categories/category_list_screen.dart';
 import 'package:myapp/views/products/product_list_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +21,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Online Shop'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await authService.signOut();
+            },
+          )
+        ],
+      ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

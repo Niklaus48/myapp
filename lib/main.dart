@@ -1,15 +1,22 @@
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
-import 'package:myapp/views/splash_screen.dart';
+import 'package:myapp/views/auth/auth_wrapper.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
         ChangeNotifierProvider(create: (_) => ProductViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => CartViewModel()),
@@ -29,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(),
+      home: const AuthWrapper(),
     );
   }
 }
