@@ -10,6 +10,7 @@ This is a Flutter application for an online shop. It uses Firebase for authentic
     * **Centralized Theme:** A new `app_theme.dart` file defines a consistent and modern color scheme, custom fonts, and component styles.
     * **`google_fonts` Integration:** The `lato` font has been integrated for a clean and readable typography.
     * **Redesigned Product Cards:** Product cards now feature a modern design with shadows, rounded corners, and improved typography.
+    * **Larger Product Images:** Product images now fill the entire available space in the product card for a more visually appealing layout.
 * **Firebase Authentication:** 
     * Users can log in with email and password.
     * **Dynamic Profile Button:** The app bar now displays a profile icon for logged-in users and a "Sign In" button for guests.

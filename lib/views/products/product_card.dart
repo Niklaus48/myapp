@@ -29,40 +29,41 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Hero(
-                  tag: product.id,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0),
-                    ),
-                    child: Image.network(
-                      product.thumbnail,
-                      height: 120,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                alignment: Alignment.topRight,
+                children: [
+                  Hero(
+                    tag: product.id,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15.0),
+                        topRight: Radius.circular(15.0),
+                      ),
+                      child: Image.network(
+                        product.thumbnail,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    favoriteViewModel.isFavorite(product)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.red,
+                  IconButton(
+                    icon: Icon(
+                      favoriteViewModel.isFavorite(product)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      if (favoriteViewModel.isFavorite(product)) {
+                        favoriteViewModel.removeFromFavorites(product);
+                      } else {
+                        favoriteViewModel.addToFavorites(product);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    if (favoriteViewModel.isFavorite(product)) {
-                      favoriteViewModel.removeFromFavorites(product);
-                    } else {
-                      favoriteViewModel.addToFavorites(product);
-                    }
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -86,7 +87,6 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
