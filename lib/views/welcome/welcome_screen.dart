@@ -1,7 +1,9 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/views/products/product_list_screen.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -26,12 +28,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       parent: _controller,
       curve: Curves.easeIn,
     );
-
+    _signInAnonymously();
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const ProductListScreen()),
       );
     });
+  }
+
+  Future<void> _signInAnonymously() async {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    await authService.signInAnonymously();
   }
 
   @override
@@ -49,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.network('https://picsum.photos/200', width: 150), // Using a placeholder image
+              Image.network('https://picsum.photos/200', width: 150),
               const SizedBox(height: 20),
               const Text(
                 'Welcome to our Shop!',

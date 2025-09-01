@@ -32,5 +32,14 @@ class AuthService {
     await _auth.signOut();
   }
 
+  Future<User?> signInAnonymously() async {
+    try {
+      final UserCredential userCredential = await _auth.signInAnonymously();
+      return userCredential.user;
+    } on FirebaseAuthException {
+      rethrow;
+    }
+  }
+
   Stream<User?> get user => _auth.authStateChanges();
 }
