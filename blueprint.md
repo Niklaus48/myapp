@@ -19,6 +19,10 @@ This is a Flutter application for an online shop. It uses Firebase for authentic
     * **Post-Authentication Redirect:** Users are automatically redirected to the product list page after a successful sign-in or sign-up.
     * **Automatic Sign-In on Sign-Up:** New users are automatically signed in after creating an account.
     * **Improved Sign-In Button Visibility:** The "Sign In" button now has a contrasting color, making it easily visible on the app bar.
+* **User Profile Management:**
+    * **Firestore Integration:** User profiles are now stored in a Firestore database, ensuring that user data is persistent across sessions.
+    * **Profile Creation:** A user profile is automatically created in Firestore upon sign-up.
+    * **View and Edit Profile:** Users can view and edit their personal information, including name, phone number, and address, from the "Personal Data" tab in their profile.
 * **Tabbed Profile Screen:** The profile section is organized into three tabs:
     * **Favorites:** Users can view a list of their favorited items, accessed through their profile.
     * **Order History:** A dedicated screen to display the user's past orders.
@@ -32,6 +36,7 @@ This is a Flutter application for an online shop. It uses Firebase for authentic
     * **Price Filter:** Users can filter products by price using a range slider.
     * **Fixed Filter Expansion:** The filter section now expands and collapses correctly.
 * **Advanced Shopping Cart:**
+    * **Firestore Integration:** The shopping cart is now stored in a Firestore database, ensuring that each user's cart is persistent across sessions.
     * Users can add products to their shopping cart.
     * Users can view the items in the cart.
     * **Quantity Management:** Users can increase or decrease the quantity of each item in the cart.

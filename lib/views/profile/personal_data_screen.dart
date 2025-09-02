@@ -13,33 +13,28 @@ class PersonalDataScreen extends StatefulWidget {
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _firstNameController;
-  late TextEditingController _middleNameController;
-  late TextEditingController _lastNameController;
-  late TextEditingController _phoneNumberController;
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
   late TextEditingController _addressController;
-  late TextEditingController _postCodeController;
 
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     userViewModel.loadUser().then((_) {
-      setState(() {
-        _firstNameController.text = userViewModel.user?.firstName ?? '';
-        _middleNameController.text = userViewModel.user?.middleName ?? '';
-        _lastNameController.text = userViewModel.user?.lastName ?? '';
-        _phoneNumberController.text = userViewModel.user?.phoneNumber ?? '';
-        _addressController.text = userViewModel.user?.address ?? '';
-        _postCodeController.text = userViewModel.user?.postCode ?? '';
-      });
+      final user = userViewModel.user;
+      if (user != null) {
+        setState(() {
+          _nameController.text = user.name;
+          _phoneController.text = user.phone;
+          _addressController.text = user.address;
+        });
+      }
     });
-    _firstNameController = TextEditingController();
-    _middleNameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _phoneNumberController = TextEditingController();
-    _addressController = TextEditingController();
-    _postCodeController = TextEditingController();
   }
 
   @override
@@ -56,28 +51,16 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 child: ListView(
                   children: [
                     TextFormField(
-                      controller: _firstNameController,
-                      decoration: const InputDecoration(labelText: 'First Name'),
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
                     ),
                     TextFormField(
-                      controller: _middleNameController,
-                      decoration: const InputDecoration(labelText: 'Middle Name'),
-                    ),
-                    TextFormField(
-                      controller: _lastNameController,
-                      decoration: const InputDecoration(labelText: 'Last Name'),
-                    ),
-                    TextFormField(
-                      controller: _phoneNumberController,
+                      controller: _phoneController,
                       decoration: const InputDecoration(labelText: 'Phone Number'),
                     ),
                     TextFormField(
                       controller: _addressController,
                       decoration: const InputDecoration(labelText: 'Address'),
-                    ),
-                    TextFormField(
-                      controller: _postCodeController,
-                      decoration: const InputDecoration(labelText: 'Post Code'),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -86,12 +69,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           final updatedUser = User(
                             uid: userViewModel.user!.uid,
                             email: userViewModel.user!.email,
-                            firstName: _firstNameController.text,
-                            middleName: _middleNameController.text,
-                            lastName: _lastNameController.text,
-                            phoneNumber: _phoneNumberController.text,
+                            name: _nameController.text,
+                            phone: _phoneController.text,
                             address: _addressController.text,
-                            postCode: _postCodeController.text,
                           );
                           userViewModel.updateUser(updatedUser);
                           ScaffoldMessenger.of(context).showSnackBar(

@@ -19,10 +19,6 @@ class UserViewModel extends ChangeNotifier {
     final currentUser = auth.FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       _user = await _userService.getUser(currentUser.uid);
-      if (_user == null) {
-        _user = User(uid: currentUser.uid, email: currentUser.email);
-        await _userService.createUser(_user!);
-      }
     }
 
     _isLoading = false;

@@ -1,54 +1,51 @@
 
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:myapp/models/cart_item.dart';
 import 'package:myapp/models/product.dart';
+import 'package:myapp/services/cart_service.dart';
 
 class CartViewModel extends ChangeNotifier {
-  final List<CartItem> _cartItems = [];
+  final CartService _cartService = CartService();
+  List<Product> _cartProducts = [];
+  StreamSubscription<List<Product>>? _cartSubscription;
 
-  List<CartItem> get cartItems => _cartItems;
+  List<Product> get cartProducts => _cartProducts;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
-  double get totalPrice {
-    double total = 0;
-    for (var item in _cartItems) {
-      total += item.product.price * item.quantity;
-    }
-    return total;
+  CartViewModel() {
+    _listenToCart();
   }
 
-  void addToCart(Product product) {
-    for (var item in _cartItems) {
-      if (item.product.id == product.id) {
-        item.quantity++;
-        notifyListeners();
-        return;
-      }
-    }
-    _cartItems.add(CartItem(product: product, quantity: 1));
+  void _listenToCart() {
+    _isLoading = true;
     notifyListeners();
+    _cartSubscription = _cartService.getCartStream().listen((products) {
+      _cartProducts = products;
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
-  void removeFromCart(CartItem cartItem) {
-    _cartItems.remove(cartItem);
-    notifyListeners();
+  Future<void> addToCart(Product product) async {
+    await _cartService.addToCart(product);
   }
 
-  void increaseQuantity(CartItem cartItem) {
-    cartItem.quantity++;
-    notifyListeners();
+  Future<void> removeFromCart(Product product) async {
+    await _cartService.removeFromCart(product);
   }
 
-  void decreaseQuantity(CartItem cartItem) {
-    if (cartItem.quantity > 1) {
-      cartItem.quantity--;
-    } else {
-      _cartItems.remove(cartItem);
-    }
-    notifyListeners();
+  Future<void> increaseQuantity(Product product) async {
+    await _cartService.updateQuantity(product, product.quantity + 1);
   }
 
-  void clearCart() {
-    _cartItems.clear();
-    notifyListeners();
+  Future<void> decreaseQuantity(Product product) async {
+    await _cartService.updateQuantity(product, product.quantity - 1);
+  }
+  
+  @override
+  void dispose() {
+    _cartSubscription?.cancel();
+    super.dispose();
   }
 }

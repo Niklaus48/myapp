@@ -13,73 +13,84 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping Cart'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.remove_shopping_cart),
-            onPressed: () {
-              cartViewModel.clearCart();
-            },
-          ),
-        ],
       ),
-      body: ListView.builder(
-        itemCount: cartViewModel.cartItems.length,
-        itemBuilder: (context, index) {
-          final cartItem = cartViewModel.cartItems[index];
-          return Dismissible(
-            key: Key(cartItem.product.id.toString()),
-            onDismissed: (direction) {
-              cartViewModel.removeFromCart(cartItem);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${cartItem.product.title} removed from cart'),
+      body: Consumer<CartViewModel>(
+        builder: (context, cart, child) {
+          if (cart.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (cart.cartProducts.isEmpty) {
+            return const Center(child: Text('Your cart is empty'));
+          }
+
+          return ListView.builder(
+            itemCount: cart.cartProducts.length,
+            itemBuilder: (context, index) {
+              final product = cart.cartProducts[index];
+              return Dismissible(
+                key: Key(product.id.toString()),
+                onDismissed: (direction) {
+                  cartViewModel.removeFromCart(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${product.title} removed from cart'),
+                    ),
+                  );
+                },
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                child: ListTile(
+                  leading: Image.network(product.thumbnail),
+                  title: Text(product.title),
+                  subtitle: Text(
+                      '\$${product.price.toStringAsFixed(2)} x ${product.quantity}'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove),
+                        onPressed: () => cartViewModel.decreaseQuantity(product),
+                      ),
+                      Text(product.quantity.toString()),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () => cartViewModel.increaseQuantity(product),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            child: ListTile(
-              leading: Image.network(cartItem.product.thumbnail),
-              title: Text(cartItem.product.title),
-              subtitle: Text(
-                  '\$${cartItem.product.price.toStringAsFixed(2)} x ${cartItem.quantity}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () => cartViewModel.decreaseQuantity(cartItem),
-                  ),
-                  Text(cartItem.quantity.toString()),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () => cartViewModel.increaseQuantity(cartItem),
-                  ),
-                ],
-              ),
-            ),
           );
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Total: \$${cartViewModel.totalPrice.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      bottomNavigationBar: Consumer<CartViewModel>(
+        builder: (context, cart, child) {
+          final totalPrice = cart.cartProducts.fold<double>(
+              0, (sum, product) => sum + (product.price * product.quantity));
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total: \$${totalPrice.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Checkout'),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Checkout'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
