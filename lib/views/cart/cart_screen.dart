@@ -75,7 +75,26 @@ class CartScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Checkout Successful'),
+                      content: const Text('Your order has been placed.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            cartViewModel.clearCart();
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               child: const Text('Checkout'),
             ),
           ],
