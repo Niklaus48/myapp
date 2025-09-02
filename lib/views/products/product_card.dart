@@ -4,6 +4,7 @@ import 'package:myapp/models/product.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/favorite_viewmodel.dart';
 import 'package:myapp/views/products/product_detail_screen.dart';
+import 'package:myapp/widgets/star_rating.dart';
 import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
@@ -30,39 +31,18 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                alignment: Alignment.topRight,
-                children: [
-                  Hero(
-                    tag: product.id,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15.0),
-                        topRight: Radius.circular(15.0),
-                      ),
-                      child: Image.network(
-                        product.thumbnail,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+              child: Hero(
+                tag: product.id,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      favoriteViewModel.isFavorite(product)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      if (favoriteViewModel.isFavorite(product)) {
-                        favoriteViewModel.removeFromFavorites(product);
-                      } else {
-                        favoriteViewModel.addToFavorites(product);
-                      }
-                    },
+                  child: Image.network(
+                    product.thumbnail,
+                    fit: BoxFit.cover,
                   ),
-                ],
+                ),
               ),
             ),
             Padding(
@@ -77,12 +57,45 @@ class ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4.0),
-                  Text(
-                    '\$${product.price}',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '\$${product.price}',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          StarRating(rating: product.rating, size: 16),
+                        ],
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          favoriteViewModel.isFavorite(product)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.red,
+                          size: 20,
                         ),
+                        constraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                        ),
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          if (favoriteViewModel.isFavorite(product)) {
+                            favoriteViewModel.removeFromFavorites(product);
+                          } else {
+                            favoriteViewModel.addToFavorites(product);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

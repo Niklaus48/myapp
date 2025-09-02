@@ -19,6 +19,7 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _isFilterExpanded = false;
 
   @override
@@ -31,6 +32,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
     _searchController.addListener(() {
       productViewModel.updateSearchQuery(_searchController.text);
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,7 +106,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ExpansionPanelList(
             expansionCallback: (int index, bool isExpanded) {
               setState(() {
-                _isFilterExpanded = !isExpanded;
+                _isFilterExpanded = !_isFilterExpanded;
               });
             },
             children: [
@@ -112,18 +120,47 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      DropdownButton<String>(
-                        value: productViewModel.selectedCategory,
-                        hint: const Text('Select a category'),
-                        isExpanded: true,
-                        items: categoryViewModel.categories
-                            .map((Category category) => DropdownMenuItem<String>(
-                                  value: category.name,
-                                  child: Text(category.name),
-                                ))
-                            .toList(),
-                        onChanged: (String? newValue) {
-                          productViewModel.updateCategory(newValue);
+                      Consumer<CategoryViewModel>(
+                        builder: (context, categoryModel, child) {
+                          if (categoryModel.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          
+                          if (categoryModel.error != null) {
+                            return ElevatedButton(
+                              onPressed: () {
+                                categoryModel.fetchCategories();
+                              },
+                              child: const Text('Retry loading categories'),
+                            );
+                          }
+
+                          return DropdownButtonFormField<String>(
+                            value: productViewModel.selectedCategory,
+                            hint: const Text('Select a category'),
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            ),
+                            items: [
+                              const DropdownMenuItem<String>(
+                                value: null,
+                                child: Text('All Categories'),
+                              ),
+                              ...categoryModel.categories
+                                  .map((Category category) => DropdownMenuItem<String>(
+                                        value: category.slug,
+                                        child: Text(category.name),
+                                      ))
+                                  .toList(),
+                            ],
+                            onChanged: (String? newValue) async {
+                              await productViewModel.updateCategory(newValue);
+                            },
+                          );
                         },
                       ),
                       const SizedBox(height: 10),
@@ -156,19 +193,73 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: const Text('Clear Filters'),
           ),
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemCount: productViewModel.products.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-              ),
-              itemBuilder: (context, index) {
-                final product = productViewModel.products[index];
-                return ProductCard(product: product);
-              },
+            child: Column(
+              children: [
+                Expanded(
+                  child: productViewModel.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : GridView.builder(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.all(10.0),
+                          itemCount: productViewModel.products.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.75,
+                            crossAxisSpacing: 10.0,
+                            mainAxisSpacing: 10.0,
+                          ),
+                          itemBuilder: (context, index) {
+                            final product = productViewModel.products[index];
+                            return ProductCard(product: product);
+                          },
+                        ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: productViewModel.currentPage > 1
+                            ? () {
+                                productViewModel.previousPage();
+                                _scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        'Page ${productViewModel.currentPage} of ${productViewModel.totalPages}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward),
+                        onPressed: productViewModel.currentPage < productViewModel.totalPages
+                            ? () {
+                                productViewModel.nextPage();
+                                _scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],

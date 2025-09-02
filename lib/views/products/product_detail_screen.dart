@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/models/product.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/favorite_viewmodel.dart';
+import 'package:myapp/widgets/star_rating.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -51,6 +52,21 @@ class ProductDetailScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
+            Row(
+              children: [
+                StarRating(rating: product.rating, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  product.rating.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             Text(product.description),
             const SizedBox(height: 16),
             Text(
