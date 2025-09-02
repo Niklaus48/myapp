@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:myapp/models/product.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
@@ -31,8 +30,6 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: Stack(
-                fit: StackFit.expand,
-                alignment: Alignment.topRight,
                 children: [
                   Hero(
                     tag: product.id,
@@ -44,23 +41,31 @@ class ProductCard extends StatelessWidget {
                       child: Image.network(
                         product.thumbnail,
                         fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      favoriteViewModel.isFavorite(product)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: Colors.red,
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: IconButton(
+                      iconSize: 20,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: Icon(
+                        favoriteViewModel.isFavorite(product)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        if (favoriteViewModel.isFavorite(product)) {
+                          favoriteViewModel.removeFromFavorites(product);
+                        } else {
+                          favoriteViewModel.addToFavorites(product);
+                        }
+                      },
                     ),
-                    onPressed: () {
-                      if (favoriteViewModel.isFavorite(product)) {
-                        favoriteViewModel.removeFromFavorites(product);
-                      } else {
-                        favoriteViewModel.addToFavorites(product);
-                      }
-                    },
                   ),
                 ],
               ),
@@ -73,6 +78,13 @@ class ProductCard extends StatelessWidget {
                   Text(
                     product.title,
                     style: Theme.of(context).textTheme.titleMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    product.category,
+                    style: Theme.of(context).textTheme.bodySmall,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

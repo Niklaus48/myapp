@@ -98,7 +98,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ExpansionPanelList(
             expansionCallback: (int index, bool isExpanded) {
               setState(() {
-                _isFilterExpanded = !isExpanded;
+                _isFilterExpanded = !_isFilterExpanded;
               });
             },
             children: [
