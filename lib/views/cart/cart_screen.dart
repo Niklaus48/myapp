@@ -45,8 +45,14 @@ class CartScreen extends StatelessWidget {
             child: ListTile(
               leading: Image.network(cartItem.product.thumbnail),
               title: Text(cartItem.product.title),
-              subtitle: Text(
-                  '\$${cartItem.product.price.toStringAsFixed(2)} x ${cartItem.quantity}'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(cartItem.product.category),
+                  Text(
+                      '\$${cartItem.product.price.toStringAsFixed(2)} x ${cartItem.quantity}'),
+                ],
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
