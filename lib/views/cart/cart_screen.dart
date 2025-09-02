@@ -20,18 +20,19 @@ class CartScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (cart.cartProducts.isEmpty) {
+          if (cart.cartItems.isEmpty) {
             return const Center(child: Text('Your cart is empty'));
           }
 
           return ListView.builder(
-            itemCount: cart.cartProducts.length,
+            itemCount: cart.cartItems.length,
             itemBuilder: (context, index) {
-              final product = cart.cartProducts[index];
+              final item = cart.cartItems[index];
+              final product = item.product;
               return Dismissible(
                 key: Key(product.id.toString()),
                 onDismissed: (direction) {
-                  cartViewModel.removeFromCart(product);
+                  cartViewModel.removeFromCart(item);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('${product.title} removed from cart'),
@@ -48,18 +49,18 @@ class CartScreen extends StatelessWidget {
                   leading: Image.network(product.thumbnail),
                   title: Text(product.title),
                   subtitle: Text(
-                      '\$${product.price.toStringAsFixed(2)} x ${product.quantity}'),
+                      '\$${product.price.toStringAsFixed(2)} x ${item.quantity}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.remove),
-                        onPressed: () => cartViewModel.decreaseQuantity(product),
+                        onPressed: () => cartViewModel.decreaseQuantity(item),
                       ),
-                      Text(product.quantity.toString()),
+                      Text(item.quantity.toString()),
                       IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: () => cartViewModel.increaseQuantity(product),
+                        onPressed: () => cartViewModel.increaseQuantity(item),
                       ),
                     ],
                   ),
@@ -71,8 +72,8 @@ class CartScreen extends StatelessWidget {
       ),
       bottomNavigationBar: Consumer<CartViewModel>(
         builder: (context, cart, child) {
-          final totalPrice = cart.cartProducts.fold<double>(
-              0, (sum, product) => sum + (product.price * product.quantity));
+          final totalPrice = cart.cartItems.fold<double>(
+              0, (sum, item) => sum + (item.product.price * item.quantity));
 
           return Padding(
             padding: const EdgeInsets.all(8.0),

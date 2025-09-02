@@ -1,13 +1,19 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/views/auth/auth_wrapper.dart';
 import 'package:myapp/views/profile/favorites_screen.dart';
 import 'package:myapp/views/profile/order_history_screen.dart';
 import 'package:myapp/views/profile/personal_data_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -19,8 +25,14 @@ class ProfileScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () async {
+                final navigator = Navigator.of(context);
                 await FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
+                if (mounted) {
+                  navigator.pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const AuthWrapper()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
               },
             ),
           ],

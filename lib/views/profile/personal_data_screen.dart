@@ -13,28 +13,20 @@ class PersonalDataScreen extends StatefulWidget {
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _phoneController = TextEditingController();
-    _addressController = TextEditingController();
-
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    userViewModel.loadUser().then((_) {
-      final user = userViewModel.user;
-      if (user != null) {
-        setState(() {
-          _nameController.text = user.name;
-          _phoneController.text = user.phone;
-          _addressController.text = user.address;
-        });
-      }
-    });
+    final user = userViewModel.user;
+    _firstNameController = TextEditingController(text: user?.firstName ?? '');
+    _lastNameController = TextEditingController(text: user?.lastName ?? '');
+    _phoneController = TextEditingController(text: user?.phoneNumber ?? '');
+    _addressController = TextEditingController(text: user?.address ?? '');
   }
 
   @override
@@ -51,8 +43,12 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 child: ListView(
                   children: [
                     TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(labelText: 'Name'),
+                      controller: _firstNameController,
+                      decoration: const InputDecoration(labelText: 'First Name'),
+                    ),
+                    TextFormField(
+                      controller: _lastNameController,
+                      decoration: const InputDecoration(labelText: 'Last Name'),
                     ),
                     TextFormField(
                       controller: _phoneController,
@@ -69,8 +65,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           final updatedUser = User(
                             uid: userViewModel.user!.uid,
                             email: userViewModel.user!.email,
-                            name: _nameController.text,
-                            phone: _phoneController.text,
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
+                            phoneNumber: _phoneController.text,
                             address: _addressController.text,
                           );
                           userViewModel.updateUser(updatedUser);

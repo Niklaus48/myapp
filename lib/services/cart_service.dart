@@ -1,5 +1,7 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/models/cart_item.dart';
 import 'package:myapp/models/product.dart';
 
 class CartService {
@@ -24,7 +26,7 @@ class CartService {
       });
     } else {
       await cartRef.doc(product.id.toString()).set({
-        ...product.toJson(),
+        'product': product.toJson(),
         'quantity': 1,
       });
     }
@@ -56,7 +58,7 @@ class CartService {
     }
   }
 
-  Stream<List<Product>> getCartStream() {
+  Stream<List<CartItem>> getCartStream() {
     if (_currentUser == null) {
       return Stream.value([]);
     }
@@ -68,7 +70,7 @@ class CartService {
         .map((snapshot) {
       return snapshot.docs.map((doc) {
         final data = doc.data();
-        return Product.fromJson(data);
+        return CartItem.fromJson(data);
       }).toList();
     });
   }

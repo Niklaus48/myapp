@@ -26,4 +26,33 @@ class Product {
       category: json['category'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'price': price,
+      'thumbnail': thumbnail,
+      'category': category,
+    };
+  }
+
+  Product copyWith({
+    int? id,
+    String? title,
+    String? description,
+    double? price,
+    String? thumbnail,
+    String? category,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      thumbnail: thumbnail ?? this.thumbnail,
+      category: category ?? this.category,
+    );
+  }
 }
