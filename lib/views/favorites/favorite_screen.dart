@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/viewmodels/favorite_viewmodel.dart';
-import 'package:myapp/views/products/product_card.dart';
+import 'package:myapp/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatelessWidget {

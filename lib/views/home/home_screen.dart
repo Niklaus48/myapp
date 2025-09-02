@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/models/product.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
 import 'package:myapp/widgets/product_card.dart';
 import 'package:provider/provider.dart';
+import 'package:myapp/views/cart/cart_screen.dart';
 
-class ProductsByCategoryScreen extends StatelessWidget {
-  final String category;
-
-  const ProductsByCategoryScreen({super.key, required this.category});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final productViewModel = Provider.of<ProductViewModel>(context);
-    final products = productViewModel.products
-        .where((product) => product.category == category)
-        .toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(category),
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
         ),
-        itemCount: products.length,
+        itemCount: productViewModel.products.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = productViewModel.products[index];
           return ProductCard(product: product);
         },
       ),
