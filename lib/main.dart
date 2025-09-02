@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:myapp/firebase_options.dart'; // Import the generated file
 import 'package:myapp/services/auth_service.dart';
 import 'package:myapp/theme/app_theme.dart';
+import 'package:myapp/viewmodels/auth_viewmodel.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
 import 'package:myapp/viewmodels/category_viewmodel.dart';
 import 'package:myapp/viewmodels/favorite_viewmodel.dart';
+import 'package:myapp/viewmodels/order_viewmodel.dart';
 import 'package:myapp/viewmodels/product_viewmodel.dart';
 import 'package:myapp/viewmodels/user_viewmodel.dart';
 import 'package:myapp/views/welcome/welcome_screen.dart';
@@ -23,11 +25,13 @@ void main() async {
         Provider<AuthService>(
           create: (_) => AuthService(),
         ),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => ProductViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => CartViewModel()),
         ChangeNotifierProvider(create: (_) => FavoriteViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => OrderViewModel()),
       ],
       child: const MyApp(),
     ),

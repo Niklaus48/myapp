@@ -7,7 +7,7 @@ import 'package:myapp/viewmodels/product_viewmodel.dart';
 import 'package:myapp/views/auth/login_screen.dart';
 import 'package:myapp/views/cart/cart_screen.dart';
 import 'package:myapp/views/products/product_card.dart';
-import 'package:myapp/views/profile/profile_screen.dart';
+import 'package:myapp/views/profile/profile_screen.dart' as profile;
 import 'package:provider/provider.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -54,7 +54,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                      MaterialPageRoute(builder: (context) => const profile.ProfileScreen()),
                     );
                   },
                 );

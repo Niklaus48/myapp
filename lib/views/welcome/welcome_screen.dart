@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:myapp/services/auth_service.dart';
-import 'package:myapp/views/products/product_list_screen.dart';
+import 'package:myapp/views/main_screen.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     _signInAnonymously();
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ProductListScreen()),
+        MaterialPageRoute(builder: (_) => const MainScreen()),
       );
     });
   }

@@ -1,7 +1,11 @@
-
 import 'package:flutter/material.dart';
+import 'package:myapp/models/order.dart';
+import 'package:myapp/viewmodels/auth_viewmodel.dart';
 import 'package:myapp/viewmodels/cart_viewmodel.dart';
+import 'package:myapp/viewmodels/order_viewmodel.dart';
+import 'package:myapp/views/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -9,6 +13,44 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    final orderViewModel = Provider.of<OrderViewModel>(context, listen: false);
+    const uuid = Uuid();
+
+    void checkout() {
+      if (authViewModel.isAuthenticated) {
+        final newOrder = Order(
+          id: uuid.v4(),
+          items: List.from(cartViewModel.cartItems),
+          total: cartViewModel.totalPrice,
+          date: DateTime.now(),
+        );
+        orderViewModel.addOrder(newOrder);
+        cartViewModel.clearCart();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Checkout Successful'),
+            content: const Text('Your order has been placed.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +123,7 @@ class CartScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: checkout,
               child: const Text('Checkout'),
             ),
           ],
